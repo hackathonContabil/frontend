@@ -4,14 +4,10 @@ export const handleErrors = (error) => {
     message: 'Sistema indisponível no momento. Tente novamente mais tarde.',
   };
 
-  if (error?.response?.status === 401) {
-    localStorage.removeItem('TOKEN_KEY');
-    window.location.href = '/login';
-    return;
-  }
-
-  if (error?.response?.data?.message) {
-    response.message = error.response.data.message;
+  if (error?.response?.data?.messages) {
+    for (var i = 0; i < error.response.data.messages.length; i++) {
+      response.message = error.response.data.messages[i];
+    }
   }
 
   return response;

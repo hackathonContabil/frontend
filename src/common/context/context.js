@@ -5,10 +5,10 @@ const Context = createContext(undefined);
 
 const ContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState();
+  const [auth, setAuth] = useState();
 
   return (
-    <Context.Provider value={{ loading, setLoading, user, setUser }}>{children}</Context.Provider>
+    <Context.Provider value={{ loading, setLoading, auth, setAuth }}>{children}</Context.Provider>
   );
 };
 

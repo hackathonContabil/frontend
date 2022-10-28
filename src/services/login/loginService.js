@@ -3,12 +3,13 @@ import { post } from '../baseService';
 
 export const login = async (payload) => {
   try {
-    const { data } = await post(`/api/v1/`, payload);
-    localStorage.setItem('TOKEN_KEY', data.token);
-    return {
-      success: true,
-      data,
-    };
+    const response = await post(`/api/v1/user/auth`, payload);
+
+    if (response.success) {
+      localStorage.setItem('TOKEN_KEY', response.data.data.token);
+    }
+
+    return response;
   } catch (error) {
     return handleErrors(error);
   }

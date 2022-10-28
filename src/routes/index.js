@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { Switch } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import CustomRoute from './customRoute';
 
+import CustomRoute from './customRoute';
 import Login from '../views/login/Login';
-import Home from '../views/home/Home';
+import Users from '../views/admin/Users';
+import Offices from '../views/admin/Offices';
+import Clients from '../views/accountant/Clients';
+import Consolidation from '../views/accountant/Consolidation';
 import Register from '../views/register/Register';
 
 class Router extends Component {
@@ -12,9 +15,24 @@ class Router extends Component {
     return (
       <Switch>
         <CustomRoute exact path="/login" component={Login} />
-        <CustomRoute exact path="/register" component={Register} isPrivate />
-        <CustomRoute exact path="/" component={Home} isPrivate />
-        <Redirect from="*" to={'/'} />
+        <CustomRoute exact path="/cadastrar" component={Register} />
+        <CustomRoute exact path="/admin/usuarios" component={Users} isPrivate isAdmin={true} />
+        <CustomRoute exact path="/admin/escritorios" component={Offices} isPrivate isAdmin={true} />
+        <CustomRoute
+          exact
+          path="/contador/usuarios"
+          component={Clients}
+          isPrivate
+          isAdmin={false}
+        />
+        <CustomRoute
+          exact
+          path="/contador/consolidacao/:id"
+          component={Consolidation}
+          isPrivate
+          isAdmin={false}
+        />
+        <Redirect from="*" to={'/admin/usuarios'} />
       </Switch>
     );
   }

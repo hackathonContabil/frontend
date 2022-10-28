@@ -10,7 +10,7 @@ const Login = () => {
   const [user, setUser] = useState({ email: '', password: '' });
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const { setLoading } = useContext(Context);
+  const { setLoading, setAuth } = useContext(Context);
   const alert = useAlert();
 
   const handleChange = (key, value) => {
@@ -42,6 +42,8 @@ const Login = () => {
     if (!response.success) {
       return alert.error(response.message);
     }
+
+    setAuth(response.data.data);
 
     window.location.href = '/home';
   };
@@ -80,12 +82,12 @@ const Login = () => {
               Log In
             </Button>
 
-            <a href="google.com">Não possuí conta? Cadastra-se.</a>
+            <a href="google.com">Não possuí conta? Cadastre-se.</a>
           </Form>
         </Col>
       </Row>
       <Footer>
-        <p>Hackathon Contábil</p>
+        <p style={{ fontWeight: 'bold', color: 'white' }}>Hackathon Uni-FACEF</p>
       </Footer>
     </Container>
   );
