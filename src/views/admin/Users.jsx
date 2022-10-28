@@ -1,16 +1,16 @@
 import React from 'react';
-import { Col, Form, Pagination, Row, Table } from 'react-bootstrap';
+import { Button, Col, Form, Pagination, Row, Table } from 'react-bootstrap';
 import { Container } from './styles';
 
 const Users = () => {
   return (
     <Container>
-      <Row>
-        <Col className="d-flex justify-content-start">
-          <Form.Control
-            className="w-50 mb-3"
-            placeholder="Busque por CNPJ, razão social ou nome do contador"
-          />
+      <Row className="mb-3">
+        <Col md={6}>
+          <Form.Control placeholder="Busque por CNPJ, razão social ou nome do contador" />
+        </Col>
+        <Col md={6}>
+          <Button>Pesquisar</Button>
         </Col>
       </Row>
       <Row>

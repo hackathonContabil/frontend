@@ -82,7 +82,7 @@ const Login = () => {
               Log In
             </Button>
 
-            <a href="google.com">Não possuí conta? Cadastre-se.</a>
+            <a href={window.origin + '/cadastrar'}>Não possuí conta? Cadastre-se!</a>
           </Form>
         </Col>
       </Row>
