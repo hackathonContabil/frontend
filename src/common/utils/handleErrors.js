@@ -1,12 +1,10 @@
-import { statusEnum } from './enum';
-
 export const handleErrors = (error) => {
   let response = {
     success: false,
     message: 'Sistema indisponível no momento. Tente novamente mais tarde.',
   };
 
-  if (error?.response?.status === statusEnum.UNAUTHORIZED) {
+  if (error?.response?.status === 401) {
     localStorage.removeItem('TOKEN_KEY');
     window.location.href = '/login';
     return;

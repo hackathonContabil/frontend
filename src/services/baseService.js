@@ -1,6 +1,6 @@
-import { axiosDefault } from '../utils/clientApi';
-import { handleErrors } from '../utils/handleErrors';
-import { handleSuccess } from '../utils/handleSuccess';
+import { axiosDefault } from '../common/utils/clientApi';
+import { handleErrors } from '../common/utils/handleErrors';
+import { handleSuccess } from '../common/utils/handleSuccess';
 
 const axios = axiosDefault();
 
@@ -13,7 +13,7 @@ export const get = async (path) => {
   }
 };
 
-export const create = async (path, payload) => {
+export const post = async (path, payload) => {
   try {
     const { data } = await axios.post(path, payload);
     return handleSuccess(data);

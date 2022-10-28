@@ -1,7 +1,7 @@
 import React from 'react';
 import Routes from './routes';
-import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
+import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import { GlobalStyle } from './globalStyle';
 import { BrowserRouter } from 'react-router-dom';
 import { ContextProvider } from './common/context/context';

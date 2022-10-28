@@ -1,7 +1,94 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Context } from '../../common/context/context';
+import { useAlert } from 'react-alert';
+import { login } from '../../services/login/loginService';
+import { Container, Footer } from './styles';
+import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
+import { validateEmail } from '../../common/utils/validators';
 
 const Login = () => {
-  return <h1>Login</h1>
+  const [user, setUser] = useState({ email: '', password: '' });
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const { setLoading } = useContext(Context);
+  const alert = useAlert();
+
+  const handleChange = (key, value) => {
+    setUser({ ...user, [key]: value });
+  };
+
+  const handleSubmit = async () => {
+    const { email, password } = user;
+    let isValid = true;
+
+    if (!validateEmail(email)) {
+      setEmailError(true);
+      isValid = false;
+      alert.error('E-mail inválido');
+    }
+
+    if (password === '') {
+      setPasswordError(true);
+      isValid = false;
+      alert.error('Senha não pode estar em branco');
+    }
+
+    if (!isValid) return;
+
+    setLoading(true);
+    const response = await login(user);
+    setLoading(false);
+
+    if (!response.success) {
+      return alert.error(response.message);
+    }
+
+    window.location.href = '/home';
+  };
+
+  return (
+    <Container>
+      <Row>
+        <Col className="text-center">
+          <Form>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Control
+                type="email"
+                placeholder="E-mail"
+                isInvalid={emailError}
+                value={user.email}
+                onChange={(e) => {
+                  handleChange('email', e.target.value);
+                  setEmailError(false);
+                }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Control
+                type="password"
+                placeholder="Senha"
+                isInvalid={passwordError}
+                value={user.password}
+                onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+                onChange={(e) => {
+                  handleChange('password', e.target.value);
+                  setPasswordError(false);
+                }}
+              />
+            </Form.Group>
+            <Button variant="primary" className="w-100 mb-3" onClick={() => handleSubmit()}>
+              Log In
+            </Button>
+
+            <a href="google.com">Não possuí conta? Cadastra-se.</a>
+          </Form>
+        </Col>
+      </Row>
+      <Footer>
+        <p>Hackathon Contábil</p>
+      </Footer>
+    </Container>
+  );
 };
 
 export default Login;
