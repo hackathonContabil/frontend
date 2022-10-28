@@ -1,19 +1,18 @@
 import React, { useContext, useEffect } from 'react';
 import { Route } from 'react-router-dom';
-import { Context } from '../common/context/authContext';
-// import { Loading, Navbar } from '../components';
+import { Loading } from '../common/components';
 import PropTypes from 'prop-types';
-import { isAuth } from '../services/auth/authService';
-// import { useHistory } from 'react-router';
-import history from './history'
+import { isAuthenticated } from '../services/auth/authService';
+import { useHistory } from 'react-router';
+import { Context } from '../common/context/context'
 
 const CustomRoute = ({ isPrivate, exact, path, component }) => {
   const { loading } = useContext(Context);
-  // const history = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     if (isPrivate) {
-      const isAuth = isAuth();
+      const isAuth = isAuthenticated();
       if (!isAuth) {
         history.push('/login');
       }
@@ -22,8 +21,8 @@ const CustomRoute = ({ isPrivate, exact, path, component }) => {
 
   return (
     <>
-      {/* {isPrivate && <Navbar />}
-      {loading && <Loading loadingState={loading} />} */}
+      {/* {isPrivate && <Navbar />} */}
+      {loading && <Loading loadingState={loading} />}
       <Route exact={exact} path={path} component={component} />
     </>
   );

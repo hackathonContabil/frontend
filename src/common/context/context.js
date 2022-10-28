@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
-const Context = createContext();
+const Context = createContext(undefined);
 
 const ContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);

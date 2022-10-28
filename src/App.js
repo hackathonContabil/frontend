@@ -1,10 +1,29 @@
-import React from "react";
+import React from 'react';
+import Routes from './routes';
+import { transitions, positions, Provider as AlertProvider } from 'react-alert';
+import AlertTemplate from 'react-alert-template-basic';
+import { GlobalStyle } from './globalStyle';
+import { BrowserRouter } from 'react-router-dom';
+import { ContextProvider } from './common/context/context';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const options = {
+  position: positions.TOP_RIGHT,
+  timeout: 5000,
+  offset: '5px',
+  transition: transitions.SCALE,
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">Learn React</header>
-    </div>
+    <BrowserRouter>
+      <GlobalStyle />
+      <ContextProvider>
+        <AlertProvider template={AlertTemplate} {...options}>
+          <Routes />
+        </AlertProvider>
+      </ContextProvider>
+    </BrowserRouter>
   );
 }
 

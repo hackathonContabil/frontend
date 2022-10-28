@@ -1,3 +1,3 @@
-const isAuth = () => {
-    return true
-}
+export const isAuthenticated = () => {
+  return true
+};
