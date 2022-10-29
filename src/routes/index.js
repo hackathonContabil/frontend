@@ -3,12 +3,12 @@ import { Switch } from 'react-router-dom';
 import { Redirect } from 'react-router';
 
 import CustomRoute from './customRoute';
-import Login from '../views/login/Login';
-import Users from '../views/admin/Users';
-import Offices from '../views/admin/Offices';
-import Clients from '../views/accountant/Clients';
-import Consolidation from '../views/accountant/Consolidation';
-import Register from '../views/register/Register';
+import Login from '../views/Login';
+import Users from '../views/User';
+import Offices from '../views/Office';
+import Clients from '../views/Client';
+import Consolidation from '../views/Consolidation';
+import Register from '../views/Register';
 
 class Router extends Component {
   render() {
