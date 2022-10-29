@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Context } from '../../common/context/context';
 import { useAlert } from 'react-alert';
-import { login } from '../../services/login/loginService';
+import { login } from '../../services/login';
 import { Container, Footer } from './styles';
-import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import { validateEmail } from '../../common/utils/validators';
+import { useHistory } from 'react-router';
 
 const Login = () => {
   const [user, setUser] = useState({ email: '', password: '' });
@@ -12,6 +13,7 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState(false);
   const { setLoading, setAuth } = useContext(Context);
   const alert = useAlert();
+  const history = useHistory();
 
   const handleChange = (key, value) => {
     setUser({ ...user, [key]: value });
@@ -45,7 +47,11 @@ const Login = () => {
 
     setAuth(response.data.data);
 
-    window.location.href = '/home';
+    if (response.data.data.isAdmin) {
+      history.push('/admin/usuarios');
+    } else {
+      history.push('/contador/usuarios');
+    }
   };
 
   return (

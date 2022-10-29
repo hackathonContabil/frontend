@@ -1,6 +1,6 @@
-import { axiosDefault } from '../common/utils/clientApi';
-import { handleErrors } from '../common/utils/handleErrors';
-import { handleSuccess } from '../common/utils/handleSuccess';
+import { axiosDefault } from '../common/utils/api';
+import { handleErrors } from '../common/utils/handlers/handleErrors';
+import { handleSuccess } from '../common/utils/handlers/handleSuccess';
 
 const axios = axiosDefault();
 

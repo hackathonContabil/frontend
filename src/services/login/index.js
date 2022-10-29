@@ -1,4 +1,4 @@
-import { handleErrors } from '../../common/utils/handleErrors';
+import { handleErrors } from '../../common/utils/handlers/handleErrors';
 import { post } from '../baseService';
 
 export const login = async (payload) => {

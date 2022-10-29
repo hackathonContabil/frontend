@@ -16,21 +16,15 @@ class Router extends Component {
       <Switch>
         <CustomRoute exact path="/login" component={Login} />
         <CustomRoute exact path="/cadastrar" component={Register} />
-        <CustomRoute exact path="/admin/usuarios" component={Users} isPrivate isAdmin={true} />
-        <CustomRoute exact path="/admin/escritorios" component={Offices} isPrivate isAdmin={true} />
-        <CustomRoute
-          exact
-          path="/contador/usuarios"
-          component={Clients}
-          isPrivate
-          isAdmin={false}
-        />
+        <CustomRoute exact path="/admin/usuarios" component={Users} isPrivate isAdmin />
+        <CustomRoute exact path="/admin/escritorios" component={Offices} isPrivate isAdmin />
+        <CustomRoute exact path="/contador/usuarios" component={Clients} isPrivate isAccountant />
         <CustomRoute
           exact
           path="/contador/consolidacao/:id"
           component={Consolidation}
           isPrivate
-          isAdmin={false}
+          isAccountant
         />
         <Redirect from="*" to={'/admin/usuarios'} />
       </Switch>

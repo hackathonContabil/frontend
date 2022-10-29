@@ -1,32 +1,39 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../../common/context/context';
 import { useAlert } from 'react-alert';
-import { login } from '../../services/login/loginService';
 import { Container, Footer } from './styles';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { validateEmail } from '../../common/utils/validators';
+import { create, getAll } from '../../services/register';
 
 const Register = () => {
   const [user, setUser] = useState({
     name: '',
     email: '',
-    crc: '',
-    office: '',
+    accountantState: '',
+    accountingOfficeId: 'invalid',
     password: '',
-    confirmPassword: '',
   });
-
   const [errors, setErrors] = useState({
     nameError: false,
     emailError: false,
     crcError: false,
-    officeError: false,
+    accountingOfficeIdError: false,
     passwordError: false,
     confirmPasswordError: false,
   });
-
-  const { setLoading, setAuth } = useContext(Context);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [offices, setOffices] = useState([]);
+  const { setLoading } = useContext(Context);
   const alert = useAlert();
+
+  useEffect(async () => {
+    const response = await getAll();
+
+    if (response.success) {
+      setOffices(response.data.data);
+    }
+  }, []);
 
   const handleChange = (key, value) => {
     setUser({ ...user, [key]: value });
@@ -37,7 +44,7 @@ const Register = () => {
   };
 
   const handleSubmit = async () => {
-    const { name, email, crc, office, password, confirmPassword } = user;
+    const { name, email, accountantState, accountingOfficeId, password } = user;
     let isValid = true;
 
     if (name === '') {
@@ -52,13 +59,13 @@ const Register = () => {
       isValid = false;
     }
 
-    if (crc === '') {
+    if (accountantState === '') {
       handleError('crcError', true);
       alert.error('CRC não pode estar em branco.');
       isValid = false;
     }
 
-    if (office === '') {
+    if (accountingOfficeId === 'invalid') {
       handleError('officeError', true);
       alert.error('Escritório não pode estar em branco.');
       isValid = false;
@@ -80,16 +87,22 @@ const Register = () => {
     if (!isValid) return;
 
     setLoading(true);
-    const response = await login(user);
+    const response = await create(user);
     setLoading(false);
 
     if (!response.success) {
       return alert.error(response.message);
+    } else {
+      setUser({
+        name: '',
+        email: '',
+        accountantState: '',
+        accountingOfficeId: '',
+        password: '',
+      });
+      setConfirmPassword('');
+      return alert.success('Usuário cadastrado com sucesso!');
     }
-
-    setAuth(response.data.data);
-
-    window.location.href = '/home';
   };
 
   return (
@@ -99,7 +112,7 @@ const Register = () => {
           <Form>
             <Row>
               <Col md={12}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" controlId="formBasic">
                   <Form.Control
                     type="text"
                     placeholder="Nome"
@@ -113,7 +126,7 @@ const Register = () => {
                 </Form.Group>
               </Col>
               <Col md={12}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" controlId="formBasic2">
                   <Form.Control
                     type="email"
                     placeholder="E-mail"
@@ -130,31 +143,39 @@ const Register = () => {
 
             <Row>
               <Col md={6}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" controlId="formBasic3">
                   <Form.Control
                     type="text"
                     placeholder="CRC"
                     isInvalid={errors.crcError}
-                    value={user.crc}
+                    value={user.accountantState}
                     onChange={(e) => {
-                      handleChange('crc', e.target.value);
+                      handleChange('accountantState', e.target.value);
                       handleError('crcError', false);
                     }}
                   />
                 </Form.Group>
               </Col>
               <Col md={6}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" controlId="formBasic4">
                   <Form.Control
-                    type="text"
-                    placeholder="Escritório"
+                    as="select"
+                    size="small"
                     isInvalid={errors.officeError}
-                    value={user.office}
+                    value={user.accountingOfficeId}
                     onChange={(e) => {
-                      handleChange('office', e.target.value);
+                      handleChange('accountingOfficeId', e.target.value);
                       handleError('officeError', false);
-                    }}
-                  />
+                    }}>
+                    <option value="invalid">Selecione o Escritório</option>
+                    {offices.map((office, key) => {
+                      return (
+                        <option style={{ textTransform: 'uppercase' }} key={key} value={office.id}>
+                          {office.name}
+                        </option>
+                      );
+                    })}
+                  </Form.Control>
                 </Form.Group>
               </Col>
             </Row>
@@ -175,15 +196,15 @@ const Register = () => {
                 </Form.Group>
               </Col>
               <Col md={12}>
-                <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Group className="mb-3" controlId="formBasicPassword2">
                   <Form.Control
                     type="password"
                     placeholder="Confirmar Senha"
                     isInvalid={errors.confirmPasswordError}
-                    value={user.confirmPassword}
+                    value={confirmPassword}
                     onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
                     onChange={(e) => {
-                      handleChange('confirmPassword', e.target.value);
+                      setConfirmPassword(e.target.value);
                       handleError('confirmPassword', false);
                     }}
                   />
