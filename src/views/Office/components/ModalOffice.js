@@ -24,8 +24,6 @@ const ModalCreateOffice = ({ openModal, handleCloseModal, isUpdate }) => {
     const { name, document } = office;
     let isValid = true;
 
-    office.document = document.replace(/[^0-9]+/g, '');
-
     if (name === '') {
       setNameError(true);
       isValid = false;
@@ -40,11 +38,14 @@ const ModalCreateOffice = ({ openModal, handleCloseModal, isUpdate }) => {
 
     if (!isValid) return;
 
+    office.document = document.replace(/[^0-9]+/g, '');
+
     setLoading(true);
     const response = await create(office);
     setLoading(false);
 
     if (!response.success) {
+      handleChange('document', maskCnpj(document));
       return alert.error(response.message);
     } else {
       setOffice({

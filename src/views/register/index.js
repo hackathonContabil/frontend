@@ -5,19 +5,20 @@ import { Container, Footer } from './styles';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { validateEmail } from '../../common/utils/validators';
 import { create, getAll } from '../../services/register';
+import { maskCRC, removeMaskCRC } from '../../common/utils/masks';
 
 const Register = () => {
   const [user, setUser] = useState({
     name: '',
     email: '',
-    accountantState: '',
+    accountantLicense: '',
     accountingOfficeId: 'invalid',
     password: '',
   });
   const [errors, setErrors] = useState({
     nameError: false,
     emailError: false,
-    crcError: false,
+    accountantLicenseError: false,
     accountingOfficeIdError: false,
     passwordError: false,
     confirmPasswordError: false,
@@ -36,7 +37,11 @@ const Register = () => {
   }, []);
 
   const handleChange = (key, value) => {
-    setUser({ ...user, [key]: value });
+    if (key !== 'accountantLicense') {
+      setUser({ ...user, [key]: value });
+    } else if (key === 'accountantLicense' && value.length < 14) {
+      setUser({ ...user, [key]: value });
+    }
   };
 
   const handleError = (field, boolean) => {
@@ -44,7 +49,7 @@ const Register = () => {
   };
 
   const handleSubmit = async () => {
-    const { name, email, accountantState, accountingOfficeId, password } = user;
+    const { name, email, accountantLicense, accountingOfficeId, password } = user;
     let isValid = true;
 
     if (name === '') {
@@ -59,8 +64,8 @@ const Register = () => {
       isValid = false;
     }
 
-    if (accountantState === '') {
-      handleError('crcError', true);
+    if (accountantLicense === '') {
+      handleError('accountantLicenseError', true);
       alert.error('CRC não pode estar em branco.');
       isValid = false;
     }
@@ -71,9 +76,9 @@ const Register = () => {
       isValid = false;
     }
 
-    if (password === '') {
+    if (password.length < 8) {
       handleError('passwordError', true);
-      alert.error('Senha não pode estar em branco');
+      alert.error('Senha deve ter ao menos 8 caracteres');
       isValid = false;
     }
 
@@ -86,17 +91,21 @@ const Register = () => {
 
     if (!isValid) return;
 
+    user.accountantLicense = removeMaskCRC(accountantLicense);
+
     setLoading(true);
     const response = await create(user);
     setLoading(false);
 
     if (!response.success) {
+      handleChange('accountantLicense', accountantLicense);
+
       return alert.error(response.message);
     } else {
       setUser({
         name: '',
         email: '',
-        accountantState: '',
+        accountantLicense: '',
         accountingOfficeId: '',
         password: '',
       });
@@ -145,13 +154,14 @@ const Register = () => {
               <Col md={6}>
                 <Form.Group className="mb-3" controlId="formBasic3">
                   <Form.Control
+                    style={{ textTransform: 'uppercase' }}
                     type="text"
-                    placeholder="CRC"
-                    isInvalid={errors.crcError}
-                    value={user.accountantState}
+                    placeholder="CRC (Ex: 1SP123456/6-0)"
+                    isInvalid={errors.accountantLicenseError}
+                    value={user.accountantLicense}
                     onChange={(e) => {
-                      handleChange('accountantState', e.target.value);
-                      handleError('crcError', false);
+                      handleChange('accountantLicense', maskCRC(e.target.value));
+                      handleError('accountantLicenseError', false);
                     }}
                   />
                 </Form.Group>
