@@ -3,7 +3,7 @@ import { post } from '../baseService';
 
 export const login = async (payload) => {
   try {
-    const response = await post(`/api/v1/user/auth`, payload);
+    const response = await post(`api/v1/user/auth`, payload);
 
     if (response.success) {
       localStorage.setItem('TOKEN_KEY', response.data.data.token);

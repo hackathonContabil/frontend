@@ -15,8 +15,13 @@ const Offices = () => {
   const { setLoading } = useContext(Context);
   const alert = useAlert();
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setShow(false);
+    setOffice({
+      name: '',
+      document: '',
+    });
+  };
 
   const handleChange = (key, value) => {
     if ((key === 'document' && value.length < 21) || key === 'name') {
@@ -28,13 +33,15 @@ const Offices = () => {
     const { name, document } = office;
     let isValid = true;
 
+    office.document = document.replace(/[^0-9]+/g, '');
+
     if (name === '') {
       setNameError(true);
       isValid = false;
       alert.error('Razão social não pode estar em branco');
     }
 
-    if (!validateCnpj(document)) {
+    if (!validateCnpj(document.replace(/[^0-9]+/g, ''))) {
       setDocumentError(true);
       isValid = false;
       alert.error('CNPJ inválido');

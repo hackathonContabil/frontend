@@ -3,7 +3,7 @@ import { post } from '../baseService';
 
 export const create = async (payload) => {
   try {
-    const response = await post(`/api/v1/accounting-office`, payload);
+    const response = await post(`api/v1/accounting-office`, payload);
 
     return response;
   } catch (error) {
