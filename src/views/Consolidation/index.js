@@ -1,45 +1,56 @@
-import React, { useState, useContext } from 'react';
-import { Button, Col, Form, Row, Table } from 'react-bootstrap';
+import React, { useState, useContext, useEffect } from 'react';
+import { useAlert } from 'react-alert';
+import { Button, Col, Row, Table } from 'react-bootstrap';
+import { useParams } from 'react-router';
 import { Context } from '../../common/context/context';
-import { getAll } from '../../services/office';
+import { maskCnpj } from '../../common/utils/masks';
+import { getAll } from '../../services/consolidation';
 import { Container } from './styles';
 
 const Consolidation = () => {
   const [info, setInfo] = useState([]);
-  const [search, setSearch] = useState({ search: '', page: 0, limit: 10 });
+  const [search, setSearch] = useState({ page: 0, limit: 10 });
   const { setLoading } = useContext(Context);
+  const { id } = useParams();
+  const alert = useAlert();
 
   const handleChange = (key, value) => {
-    setSearch({ ...search, [key]: value });
+    setSearch((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleGetTransactions = async () => {
     setLoading(true);
-    const response = await getAll(search);
 
-    if (response.success) {
-      setInfo(response.data.data.users.users);
+    const response = await getAll(id, search);
+
+    if (!response.success) {
+      return alert.error(response.message);
     }
 
-    setLoading(false);
+    if (response.data.data.transactions.total === 0) {
+      setLoading(false);
+
+      return alert.info('Não foram encontradas transações para este cliente');
+    } else {
+      setLoading(false);
+
+      return setInfo(response.data.data.transactions.transactions);
+    }
+  };
+
+  useEffect(() => {
+    handleGetTransactions();
+  }, info);
+
+  const handleExport = () => {
+    return;
   };
 
   return (
     <Container>
       <Row className="mb-3">
         <Col md={6}>
-          <Form.Control
-            type="text"
-            placeholder="Busque por CNPJ, razão social ou nome do contador"
-            value={search.search}
-            onKeyPress={(e) => e.key === 'Enter' && handleGetTransactions()}
-            onChange={(e) => {
-              handleChange('search', e.target.value);
-            }}
-          />
-        </Col>
-        <Col md={6}>
-          <Button onClick={() => handleGetTransactions()}>Pesquisar</Button>
+          <Button onClick={() => handleExport()}>Exportar Transações</Button>
         </Col>
       </Row>
       <Row>
@@ -59,21 +70,18 @@ const Consolidation = () => {
               </tr>
             </thead>
             <tbody>
-              {info.map((user, index) => {
+              {info.map((transaction, index) => {
                 return (
                   <tr style={{ cursor: 'pointer' }} key={index} onClick={() => {}}>
-                    <td>{user.id}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.office}</td>
-                    <td>{user.phone}</td>
-                    <td>{user.document}</td>
-                    <td>{user.isAccountant ? 'Contador' : user.isAdmin ? 'Admin' : 'Cliente'}</td>
-                    <td>{user.createdAt}</td>
-                    <td>{user.isSharingBankAccountData ? 'Sim' : 'Não'}</td>
-                    <td>{user.isEmailConfirmed ? 'Sim' : 'Não'}</td>
-                    <td>{user.emailConfirmedAt}</td>
-                    <td>{user.isActive ? 'Sim' : 'Não'}</td>
+                    <td>{transaction.id}</td>
+                    <td>{transaction.createdAt}</td>
+                    <td>{transaction.email}</td>
+                    <td>{transaction.office}</td>
+                    <td>{transaction.phone}</td>
+                    <td>{transaction.document}</td>
+                    <td>{transaction.createdAt}</td>
+                    <td>{transaction.isSharingBankAccountData}</td>
+                    <td>{transaction.isEmailConfirmed}</td>
                   </tr>
                 );
               })}
