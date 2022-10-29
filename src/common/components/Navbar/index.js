@@ -1,20 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import { Container, Nav } from 'react-bootstrap';
-import { Context } from '../../context/context';
 import { useHistory } from 'react-router';
 
 const NavbarComponent = () => {
-  const { auth } = useContext(Context);
+  let auth = window.location.pathname.split('/');
+  auth = auth[1];
   const history = useHistory();
-  const teste = true;
 
   return (
     <Navbar bg="primary" variant="dark">
       <Container>
         <Navbar.Brand>Hackathon Uni-FACEF</Navbar.Brand>
         <Nav className="me-auto">
-          {teste ? (
+          {auth === 'admin' ? (
             <>
               <Nav.Link onClick={() => history.push('/admin/usuarios')}>
                 Controle de Usuários
@@ -25,7 +24,7 @@ const NavbarComponent = () => {
             </>
           ) : (
             <Nav.Link onClick={() => history.push('/contador/usuarios')}>
-              Controle de Usuários
+              Controle de Clientes
             </Nav.Link>
           )}
           <Nav.Link

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Route } from 'react-router-dom';
 import { isAuthenticated } from '../services/auth';
 import { useHistory } from 'react-router';
@@ -10,12 +10,23 @@ import PropTypes from 'prop-types';
 const CustomRoute = ({ isPrivate, exact, path, component, isAdmin, isAccountant }) => {
   const { loading } = useContext(Context);
   const history = useHistory();
+  const { setAuth } = useContext(Context);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (isPrivate) {
-      const isAuth = isAuthenticated();
-      if (!isAuth) {
+      const isAuth = await isAuthenticated();
+      if (!isAuth.success) {
         history.push('/login');
+      }
+
+      setAuth(isAuth.data.data);
+
+      if (isAdmin && isAuth.data.data.isAccountant) {
+        history.push('/contador/clientes');
+      }
+
+      if (isAccountant && isAuth.data.data.isAdmin) {
+        history.push('/admin/usuarios');
       }
     }
   }, []);

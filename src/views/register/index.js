@@ -79,7 +79,7 @@ const Register = () => {
 
     if (password !== confirmPassword) {
       handleError('passwordError', true);
-      handleError('confirmPassword', true);
+      handleError('confirmPasswordError', true);
       alert.error('Senhas não correspondem');
       isValid = false;
     }
@@ -134,7 +134,7 @@ const Register = () => {
                     value={user.email}
                     onChange={(e) => {
                       handleChange('email', e.target.value);
-                      handleError('nameError', false);
+                      handleError('emailError', false);
                     }}
                   />
                 </Form.Group>
@@ -190,7 +190,7 @@ const Register = () => {
                     onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
                     onChange={(e) => {
                       handleChange('password', e.target.value);
-                      handleError('nameError', false);
+                      handleError('passwordError', false);
                     }}
                   />
                 </Form.Group>

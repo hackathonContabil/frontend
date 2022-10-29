@@ -1,123 +1,87 @@
-import React, { useState, useContext } from 'react';
-import { useAlert } from 'react-alert';
-import { Button, Col, Form, Modal, Pagination, Row, Table } from 'react-bootstrap';
+import React, { useContext, useState } from 'react';
+import { Button, Col, Form, Pagination, Row, Table } from 'react-bootstrap';
 import { Context } from '../../common/context/context';
-import { maskCnpj } from '../../common/utils/masks';
-import { validateCnpj } from '../../common/utils/validators';
-import { create } from '../../services/office';
+import ModalOffice from './components/ModalOffice';
 import { Container } from './styles';
 
 const Offices = () => {
   const [show, setShow] = useState(false);
-  const [office, setOffice] = useState({ name: '', document: '' });
-  const [nameError, setNameError] = useState(false);
-  const [documentError, setDocumentError] = useState(false);
+  const [isUpdate, setIsUpate] = useState(false);
+  const [search, setSearch] = useState('');
   const { setLoading } = useContext(Context);
-  const alert = useAlert();
 
   const handleClose = () => {
     setShow(false);
-    setOffice({
-      name: '',
-      document: '',
-    });
   };
 
-  const handleChange = (key, value) => {
-    if ((key === 'document' && value.length < 21) || key === 'name') {
-      setOffice({ ...office, [key]: value });
-    }
+  const info = [
+    {
+      teste: 'teste',
+      teste2: 'teste',
+      teste3: 'teste',
+    },
+    {
+      teste: 'teste',
+      teste2: 'teste',
+      teste3: 'teste',
+    },
+    {
+      teste: 'teste',
+      teste2: 'teste',
+      teste3: 'teste',
+    },
+    {
+      teste: 'teste',
+      teste2: 'teste',
+      teste3: 'teste',
+    },
+  ];
+
+  const handleChange = (value) => {
+    setSearch(value);
   };
 
   const handleSubmit = async () => {
-    const { name, document } = office;
     let isValid = true;
-
-    office.document = document.replace(/[^0-9]+/g, '');
-
-    if (name === '') {
-      setNameError(true);
-      isValid = false;
-      alert.error('Razão social não pode estar em branco');
-    }
-
-    if (!validateCnpj(document.replace(/[^0-9]+/g, ''))) {
-      setDocumentError(true);
-      isValid = false;
-      alert.error('CNPJ inválido');
-    }
 
     if (!isValid) return;
 
-    setLoading(true);
-    const response = await create(office);
-    setLoading(false);
+    console.log(search);
 
-    if (!response.success) {
-      return alert.error(response.message);
-    } else {
-      setOffice({
-        name: '',
-        document: '',
-      });
-      setShow(false);
-      return alert.success('Usuário cadastrado com sucesso!');
-    }
+    setLoading(true);
+    const response = '';
+    setLoading(false);
+  };
+
+  const handleOffice = (e) => {
+    setShow(true);
   };
 
   return (
     <>
-      <Modal centered show={show} onHide={handleClose}>
-        <Modal.Header>
-          <Modal.Title>Cadastre um novo escritório</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Control
-                isInvalid={nameError}
-                type="email"
-                placeholder="Razão Social"
-                autoFocus
-                value={office.name}
-                onChange={(e) => {
-                  handleChange('name', e.target.value);
-                  setNameError(false);
-                }}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Control
-                type="text"
-                placeholder="CNPJ"
-                isInvalid={documentError}
-                value={office.document}
-                onChange={(e) => {
-                  handleChange('document', maskCnpj(e.target.value));
-                  setDocumentError(false);
-                }}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={() => handleSubmit()}>
-            Cadastrar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ModalOffice openModal={show} handleCloseModal={handleClose} isUpdate={isUpdate} />
 
       <Container>
         <Row className="mb-3">
           <Col md={6}>
-            <Form.Control placeholder="Busque por CNPJ, razão social ou nome do contador" />
+            <Form.Control
+              type="text"
+              placeholder="Busque por CNPJ, razão social ou nome do contador"
+              value={search}
+              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+              onChange={(e) => {
+                handleChange(e.target.value);
+              }}
+            />
           </Col>
           <Col md={6} className="d-flex justify-content-between">
             <Button>Pesquisar</Button>
-            <Button variant="success" onClick={() => setShow(true)}>
+            <Button
+              variant="success"
+              onClick={() => {
+                setShow(true);
+                setIsUpate(false);
+              }}>
               Cadastrar Novo Escritório
             </Button>
           </Col>
@@ -127,27 +91,27 @@ const Offices = () => {
             <Table responsive striped bordered hover>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>Código</th>
                   <th>Razão Social</th>
                   <th>CNPJ</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+                {info.map((user, index) => {
+                  return (
+                    <tr
+                      style={{ cursor: 'pointer' }}
+                      key={index}
+                      onClick={(e) => {
+                        handleOffice(e);
+                        setIsUpate(true);
+                      }}>
+                      <td>{user.teste}</td>
+                      <td>{user.teste2}</td>
+                      <td>{user.teste3}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </Table>
           </Col>

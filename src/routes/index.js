@@ -18,7 +18,7 @@ class Router extends Component {
         <CustomRoute exact path="/cadastrar" component={Register} />
         <CustomRoute exact path="/admin/usuarios" component={Users} isPrivate isAdmin />
         <CustomRoute exact path="/admin/escritorios" component={Offices} isPrivate isAdmin />
-        <CustomRoute exact path="/contador/usuarios" component={Clients} isPrivate isAccountant />
+        <CustomRoute exact path="/contador/clientes" component={Clients} isPrivate isAccountant />
         <CustomRoute
           exact
           path="/contador/consolidacao/:id"
