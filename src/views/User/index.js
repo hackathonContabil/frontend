@@ -10,18 +10,18 @@ const Users = () => {
   const [show, setShow] = useState(false);
   const [search, setSearch] = useState({ search: '', page: 0, limit: 10 });
   const [info, setInfo] = useState([]);
-  const [user, setUser] = useState({ type: '', id: '' });
+  const [user, setUser] = useState({ type: '', id: '', isActive: false });
   const { setLoading } = useContext(Context);
 
-  useEffect(() => handleGetUsers(), []);
+  useEffect(() => handleGetUsers(), info);
 
   const handleClose = () => {
     setShow(false);
   };
 
   const handleUser = (e) => {
-    if (e.isAdmin) setUser({ type: 'admin', id: e.id });
-    if (e.isAccountant) setUser({ type: 'accountant', id: e.id });
+    if (e.isAdmin) setUser({ type: 'admin', id: e.id, isActive: e.isActive });
+    if (e.isAccountant) setUser({ type: 'accountant', id: e.id, isActive: e.isActive });
     if (e.client) setUser({ type: 'client', id: e.id });
 
     setShow(true);

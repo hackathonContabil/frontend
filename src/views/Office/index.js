@@ -14,7 +14,7 @@ const Offices = () => {
   const [info, setInfo] = useState([]);
   const { setLoading } = useContext(Context);
 
-  useEffect(() => handleSubmit(), []);
+  useEffect(() => handleSubmit(), info);
 
   const handleClose = () => {
     setShow(false);

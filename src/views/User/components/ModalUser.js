@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Context } from '../../../common/context/context';
@@ -18,6 +18,9 @@ const ModalUser = ({ openModal, handleCloseModal, user }) => {
       handleCloseModal();
       return alert.error(response.message);
     }
+
+    handleCloseModal();
+    return alert.success('Usuário ativado com sucesso');
   };
 
   return (
@@ -30,7 +33,10 @@ const ModalUser = ({ openModal, handleCloseModal, user }) => {
           {user.type === 'accountant' ? (
             <>
               <Col md={12} className="d-flex justify-content-center">
-                <Button onClick={() => handleActiveUser(user.id)} className="w-50 mb-2">
+                <Button
+                  disabled={user.isActive}
+                  onClick={() => handleActiveUser(user.id)}
+                  className="w-50 mb-2">
                   Ativar Usuário
                 </Button>
               </Col>

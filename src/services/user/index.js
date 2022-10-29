@@ -1,5 +1,5 @@
 import { handleErrors } from '../../common/utils/handlers/handleErrors';
-import { get } from '../baseService';
+import { get, post } from '../baseService';
 
 export const getAll = async (data) => {
   try {
@@ -17,7 +17,7 @@ export const getAll = async (data) => {
 
 export const active = async (data) => {
   try {
-    const response = await get(`api/v1/user/client/activate/${data}`);
+    const response = await post(`api/v1/user/accountant/activate/${data}`);
 
     return response;
   } catch (error) {
