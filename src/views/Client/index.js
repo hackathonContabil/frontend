@@ -1,36 +1,93 @@
-import React, { useContext, useState } from 'react';
-import { Button, Col, Form, Pagination, Row, Table } from 'react-bootstrap';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { Context } from '../../common/context/context';
-import ModalClient from './components/ModalClient';
+import { getAll } from '../../services/user';
 import { Container } from './styles';
+import ModalClient from './components/ModalClient';
+import { maskCnpj, maskPhone } from '../../common/utils/masks';
 
 const Clients = () => {
   const [show, setShow] = useState(false);
-  const [isUpdate, setIsUpate] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState({ search: '', page: 0, limit: 10 });
+  const [info, setInfo] = useState([]);
+  const [user, setUser] = useState({ type: '', id: '', isActive: false });
   const { setLoading } = useContext(Context);
+
+  useEffect(() => handleGetUsers(), info);
 
   const handleClose = () => {
     setShow(false);
   };
 
-  const handleChange = (value) => {
-    setSearch(value);
+  const handleUser = (e) => {
+    if (e.isAdmin)
+      setUser({ type: 'admin', id: e.id, isActive: e.isActive, emailActive: e.isEmailConfirmed });
+    if (e.isAccountant)
+      setUser({
+        type: 'accountant',
+        id: e.id,
+        isActive: e.isActive,
+        emailActive: e.isEmailConfirmed,
+      });
+    if (e.isClient)
+      setUser({ type: 'client', id: e.id, isActive: e.isActive, emailActive: e.isEmailConfirmed });
+
+    setShow(true);
   };
 
-  const handleSubmit = async () => {
-    let isValid = true;
+  const handleChange = (key, value) => {
+    setSearch({ ...search, [key]: value });
+  };
 
-    if (!isValid) return;
-
+  const handleGetUsers = async () => {
     setLoading(true);
-    const response = '';
+    const response = await getAll(search);
+
+    if (response.success) {
+      response.data.data.users.users.map((user) => {
+        user.createdAt = handleMask(user.createdAt, 'data');
+        user.emailConfirmedAt = handleMask(user.emailConfirmedAt, 'data');
+        user.document = handleMask(user.document, 'document');
+        user.phone = handleMask(user.phone, 'phone');
+      });
+
+      setInfo(response.data.data.users.users);
+    }
+
     setLoading(false);
+  };
+
+  const handleMask = (data, type) => {
+    if (type === 'data') {
+      if (data !== null) {
+        const subData = data.substring(0, 10);
+        const splittedDate = subData.split('-');
+        const formatedData = splittedDate[2] + '/' + splittedDate[1] + '/' + splittedDate[0];
+
+        return formatedData;
+      }
+    }
+
+    if (type === 'document') {
+      if (data != null) {
+        const maskedCnpj = maskCnpj(data);
+
+        return maskedCnpj;
+      }
+    }
+
+    if (type === 'phone') {
+      if (data !== null) {
+        const maskedValue = maskPhone(data);
+
+        return maskedValue;
+      }
+    }
   };
 
   return (
     <>
-      <ModalClient openModal={show} handleCloseModal={handleClose} />
+      <ModalClient openModal={show} handleCloseModal={handleClose} user={user} />
 
       <Container>
         <Row className="mb-3">
@@ -38,15 +95,15 @@ const Clients = () => {
             <Form.Control
               type="text"
               placeholder="Busque por CNPJ, razão social ou nome do contador"
-              value={search}
-              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+              value={search.search}
+              onKeyPress={(e) => e.key === 'Enter' && handleGetUsers()}
               onChange={(e) => {
-                handleChange(e.target.value);
+                handleChange('search', e.target.value);
               }}
             />
           </Col>
           <Col md={6}>
-            <Button>Pesquisar</Button>
+            <Button onClick={() => handleGetUsers()}>Pesquisar</Button>
           </Col>
         </Row>
         <Row>
@@ -54,50 +111,72 @@ const Clients = () => {
             <Table responsive striped bordered hover>
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Razão Social</th>
-                  <th>CNPJ</th>
+                  <th>Código</th>
+                  <th>Nome</th>
+                  <th>E-mail</th>
+                  <th>Escritório</th>
+                  <th>Telefone</th>
+                  <th>Documento</th>
+                  <th>Função</th>
+                  <th>Data de Criação</th>
+                  <th>Compartilha Informações Bancárias</th>
+                  <th>E-mail validado</th>
+                  <th>Data de ativação do e-mail</th>
+                  <th>Ativo</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+                {info.map((user, index) => {
+                  return (
+                    <tr style={{ cursor: 'pointer' }} key={index} onClick={() => handleUser(user)}>
+                      <td>{user.id}</td>
+                      <td>{user.name}</td>
+                      <td>{user.email}</td>
+                      <td>{user.office}</td>
+                      <td>{user.phone}</td>
+                      <td>{user.document}</td>
+                      <td>{user.isAccountant ? 'Contador' : user.isAdmin ? 'Admin' : 'Cliente'}</td>
+                      <td>{user.createdAt}</td>
+                      <td>{user.isSharingBankAccountData ? 'Sim' : 'Não'}</td>
+                      <td>{user.isEmailConfirmed ? 'Sim' : 'Não'}</td>
+                      <td>{user.emailConfirmedAt}</td>
+                      <td>{user.isActive ? 'Sim' : 'Não'}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </Table>
           </Col>
         </Row>
-        <Row>
-          <Col className="d-flex justify-content-end">
-            <Pagination>
-              <Pagination.First />
-              <Pagination.Prev />
-              <Pagination.Item>{1}</Pagination.Item>
-              <Pagination.Ellipsis />
-
-              <Pagination.Item>{10}</Pagination.Item>
-              <Pagination.Item>{11}</Pagination.Item>
-              <Pagination.Item active>{12}</Pagination.Item>
-              <Pagination.Item>{13}</Pagination.Item>
-              <Pagination.Item disabled>{14}</Pagination.Item>
-
-              <Pagination.Ellipsis />
-              <Pagination.Item>{20}</Pagination.Item>
-              <Pagination.Next />
-              <Pagination.Last />
-            </Pagination>
+        <Row className="mt-3">
+          <Col className="d-flex justify-content-end ">
+            <ul className="pagination">
+              <li className="page-item">
+                <a className="page-link" href="#">
+                  {'<'}
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" href="#">
+                  1
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" href="#">
+                  2
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" href="#">
+                  3
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" href="#">
+                  {'>'}
+                </a>
+              </li>
+            </ul>
           </Col>
         </Row>
       </Container>

@@ -1,101 +1,66 @@
-import React, { useContext, useState } from 'react';
-import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Alert, Button, Col, Modal, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Context } from '../../../common/context/context';
-import { maskCnpj } from '../../../common/utils/masks';
-import { validateCnpj } from '../../../common/utils/validators';
-import { create } from '../../../services/office';
 import { useAlert } from 'react-alert';
+import { active } from '../../../services/client';
+import { useHistory } from 'react-router';
 
-const ModalClient = ({ openModal, handleCloseModal }) => {
-  const [office, setOffice] = useState({ name: '', document: '' });
-  const [nameError, setNameError] = useState(false);
-  const [documentError, setDocumentError] = useState(false);
+const ModalClient = ({ openModal, handleCloseModal, user }) => {
   const { setLoading } = useContext(Context);
   const alert = useAlert();
+  const history = useHistory();
 
-  const handleChange = (key, value) => {
-    if ((key === 'document' && value.length < 21) || key === 'name') {
-      setOffice({ ...office, [key]: value });
-    }
-  };
-
-  const handleSubmit = async () => {
-    const { name, document } = office;
-    let isValid = true;
-
-    office.document = document.replace(/[^0-9]+/g, '');
-
-    if (name === '') {
-      setNameError(true);
-      isValid = false;
-      alert.error('Razão social não pode estar em branco');
-    }
-
-    if (!validateCnpj(document.replace(/[^0-9]+/g, ''))) {
-      setDocumentError(true);
-      isValid = false;
-      alert.error('CNPJ inválido');
-    }
-
-    if (!isValid) return;
-
+  const handleActiveUser = async (userId) => {
     setLoading(true);
-    const response = await create(office);
+    const response = await active(userId);
     setLoading(false);
 
     if (!response.success) {
+      handleCloseModal();
       return alert.error(response.message);
-    } else {
-      setOffice({
-        name: '',
-        document: '',
-      });
-
-      return alert.success('Usuário cadastrado com sucesso!');
     }
+
+    handleCloseModal();
+    return alert.success('Usuário ativado com sucesso');
   };
 
-  const handleClearField = () => {
-    setOffice({
-      name: '',
-      document: '',
-    });
+  const handleTransactions = (id) => {
+    history.push('/contador/consolidacao/' + id);
   };
 
   return (
-    <Modal
-      centered
-      show={openModal}
-      onHide={() => {
-        handleCloseModal();
-        handleClearField();
-      }}>
+    <Modal centered show={openModal} onHide={() => handleCloseModal()}>
       <Modal.Header className="d-flex justify-content-center">
         <Modal.Title>Opções do Usuário</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="p-3">
           <Col md={12} className="d-flex justify-content-center">
-            <Button className="w-50 mb-2">Ação </Button>
+            {!user.emailActive && (
+              <Alert key="info" variant="info" className="mb-3">
+                E-mail do usuário não confirmado
+              </Alert>
+            )}
           </Col>
           <Col md={12} className="d-flex justify-content-center">
-            <Button className="w-50 mb-2">Ação </Button>
+            <Button
+              disabled={user.isActive || !user.emailActive}
+              onClick={() => handleActiveUser(user.id)}
+              className="w-50 mb-3">
+              Ativar Usuário
+            </Button>
           </Col>
           <Col md={12} className="d-flex justify-content-center">
-            <Button className="w-50 mb-2">Ação </Button>
-          </Col>
-          <Col md={12} className="d-flex d-flex justify-content-center">
-            <Button className="w-50">Ação </Button>
+            <Button onClick={() => handleTransactions(user.id)} className="w-50">
+              Acessar Transações
+            </Button>
           </Col>
         </Row>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className="d-flex justify-content-center">
         <Button variant="secondary" onClick={() => handleCloseModal()}>
-          Cancelar
-        </Button>
-        <Button variant="primary" onClick={() => handleSubmit()}>
-          Cadastrar
+          Fechar
         </Button>
       </Modal.Footer>
     </Modal>
@@ -104,6 +69,7 @@ const ModalClient = ({ openModal, handleCloseModal }) => {
 
 ModalClient.propTypes = {
   openModal: PropTypes.bool,
+  user: PropTypes.object,
   handleCloseModal: PropTypes.func,
 };
 

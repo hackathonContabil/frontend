@@ -22,7 +22,7 @@ const Users = () => {
   const handleUser = (e) => {
     if (e.isAdmin) setUser({ type: 'admin', id: e.id, isActive: e.isActive });
     if (e.isAccountant) setUser({ type: 'accountant', id: e.id, isActive: e.isActive });
-    if (e.client) setUser({ type: 'client', id: e.id });
+    if (e.isClient) setUser({ type: 'client', id: e.id, isActive: e.isActive });
 
     setShow(true);
   };
@@ -38,6 +38,7 @@ const Users = () => {
     if (response.success) {
       response.data.data.users.users.map((user) => {
         user.createdAt = handleMask(user.createdAt, 'data');
+        user.emailConfirmedAt = handleMask(user.emailConfirmedAt, 'data');
         user.document = handleMask(user.document, 'document');
         user.phone = handleMask(user.phone, 'phone');
       });
@@ -50,11 +51,13 @@ const Users = () => {
 
   const handleMask = (data, type) => {
     if (type === 'data') {
-      const subData = data.substring(0, 10);
-      const splittedDate = subData.split('-');
-      const formatedData = splittedDate[2] + '/' + splittedDate[1] + '/' + splittedDate[0];
+      if (data !== null) {
+        const subData = data.substring(0, 10);
+        const splittedDate = subData.split('-');
+        const formatedData = splittedDate[2] + '/' + splittedDate[1] + '/' + splittedDate[0];
 
-      return formatedData;
+        return formatedData;
+      }
     }
 
     if (type === 'document') {
@@ -66,7 +69,7 @@ const Users = () => {
     }
 
     if (type === 'phone') {
-      if (data != null) {
+      if (data !== null) {
         const maskedValue = maskPhone(data);
 
         return maskedValue;
@@ -128,7 +131,7 @@ const Users = () => {
                       <td>{user.createdAt}</td>
                       <td>{user.isSharingBankAccountData ? 'Sim' : 'Não'}</td>
                       <td>{user.isEmailConfirmed ? 'Sim' : 'Não'}</td>
-                      <td>{user.email}</td>
+                      <td>{user.emailConfirmedAt}</td>
                       <td>{user.isActive ? 'Sim' : 'Não'}</td>
                     </tr>
                   );
@@ -137,7 +140,7 @@ const Users = () => {
             </Table>
           </Col>
         </Row>
-        <Row>
+        <Row className="mt-3">
           <Col className="d-flex justify-content-end ">
             <ul className="pagination">
               <li className="page-item">

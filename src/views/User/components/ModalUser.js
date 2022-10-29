@@ -41,7 +41,7 @@ const ModalUser = ({ openModal, handleCloseModal, user }) => {
                 </Button>
               </Col>
               <Col md={12} className="d-flex justify-content-center">
-                <Button disabled={true} className="w-50 mb-2">
+                <Button disabled={true} className="w-50 mb-3">
                   ...
                 </Button>
               </Col>
@@ -49,12 +49,12 @@ const ModalUser = ({ openModal, handleCloseModal, user }) => {
           ) : user.type === 'admin' ? (
             <>
               <Col md={12} className="d-flex justify-content-center">
-                <Button disabled={true} className="w-50 mb-2">
+                <Button disabled={true} className="w-50 mb-3">
                   ...
                 </Button>
               </Col>
               <Col md={12} className="d-flex justify-content-center">
-                <Button disabled={true} className="w-50 mb-2">
+                <Button disabled={true} className="w-50 mb-3">
                   ...
                 </Button>
               </Col>
@@ -63,12 +63,12 @@ const ModalUser = ({ openModal, handleCloseModal, user }) => {
           ) : (
             <>
               <Col md={12} className="d-flex justify-content-center">
-                <Button disabled={true} className="w-50 mb-2">
+                <Button disabled={true} className="w-50 mb-3">
                   ...
                 </Button>
               </Col>
               <Col md={12} className="d-flex justify-content-center">
-                <Button disabled={true} className="w-50 mb-2">
+                <Button disabled={true} className="w-50 mb-3">
                   ...
                 </Button>
               </Col>
