@@ -1,101 +1,78 @@
 import React, { useContext, useState } from 'react';
-import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Context } from '../../../common/context/context';
-import { maskCnpj } from '../../../common/utils/masks';
-import { validateCnpj } from '../../../common/utils/validators';
-import { create } from '../../../services/office';
 import { useAlert } from 'react-alert';
+import { active } from '../../../services/user';
 
-const ModalUser = ({ openModal, handleCloseModal }) => {
-  const [office, setOffice] = useState({ name: '', document: '' });
-  const [nameError, setNameError] = useState(false);
-  const [documentError, setDocumentError] = useState(false);
+const ModalUser = ({ openModal, handleCloseModal, user }) => {
   const { setLoading } = useContext(Context);
   const alert = useAlert();
 
-  const handleChange = (key, value) => {
-    if ((key === 'document' && value.length < 21) || key === 'name') {
-      setOffice({ ...office, [key]: value });
-    }
-  };
-
-  const handleSubmit = async () => {
-    const { name, document } = office;
-    let isValid = true;
-
-    office.document = document.replace(/[^0-9]+/g, '');
-
-    if (name === '') {
-      setNameError(true);
-      isValid = false;
-      alert.error('Razão social não pode estar em branco');
-    }
-
-    if (!validateCnpj(document.replace(/[^0-9]+/g, ''))) {
-      setDocumentError(true);
-      isValid = false;
-      alert.error('CNPJ inválido');
-    }
-
-    if (!isValid) return;
-
+  const handleActiveUser = async (userId) => {
     setLoading(true);
-    const response = await create(office);
+    const response = await active(userId);
     setLoading(false);
 
     if (!response.success) {
+      handleCloseModal();
       return alert.error(response.message);
-    } else {
-      setOffice({
-        name: '',
-        document: '',
-      });
-
-      return alert.success('Usuário cadastrado com sucesso!');
     }
   };
 
-  const handleClearField = () => {
-    setOffice({
-      name: '',
-      document: '',
-    });
-  };
-
   return (
-    <Modal
-      centered
-      show={openModal}
-      onHide={() => {
-        handleCloseModal();
-        handleClearField();
-      }}>
+    <Modal centered show={openModal} onHide={() => handleCloseModal()}>
       <Modal.Header className="d-flex justify-content-center">
         <Modal.Title>Opções do Usuário</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="p-3">
-          <Col md={12} className="d-flex justify-content-center">
-            <Button className="w-50 mb-2">Ação </Button>
-          </Col>
-          <Col md={12} className="d-flex justify-content-center">
-            <Button className="w-50 mb-2">Ação </Button>
-          </Col>
-          <Col md={12} className="d-flex justify-content-center">
-            <Button className="w-50 mb-2">Ação </Button>
-          </Col>
-          <Col md={12} className="d-flex d-flex justify-content-center">
-            <Button className="w-50">Ação </Button>
-          </Col>
+          {user.type === 'accountant' ? (
+            <>
+              <Col md={12} className="d-flex justify-content-center">
+                <Button onClick={() => handleActiveUser(user.id)} className="w-50 mb-2">
+                  Ativar Usuário
+                </Button>
+              </Col>
+              <Col md={12} className="d-flex justify-content-center">
+                <Button disabled={true} className="w-50 mb-2">
+                  ...
+                </Button>
+              </Col>
+            </>
+          ) : user.type === 'admin' ? (
+            <>
+              <Col md={12} className="d-flex justify-content-center">
+                <Button disabled={true} className="w-50 mb-2">
+                  ...
+                </Button>
+              </Col>
+              <Col md={12} className="d-flex justify-content-center">
+                <Button disabled={true} className="w-50 mb-2">
+                  ...
+                </Button>
+              </Col>
+              <Col md={12} className="d-flex justify-content-center"></Col>
+            </>
+          ) : (
+            <>
+              <Col md={12} className="d-flex justify-content-center">
+                <Button disabled={true} className="w-50 mb-2">
+                  ...
+                </Button>
+              </Col>
+              <Col md={12} className="d-flex justify-content-center">
+                <Button disabled={true} className="w-50 mb-2">
+                  ...
+                </Button>
+              </Col>
+            </>
+          )}
         </Row>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className="d-flex justify-content-center">
         <Button variant="secondary" onClick={() => handleCloseModal()}>
-          Cancelar
-        </Button>
-        <Button variant="primary" onClick={() => handleSubmit()}>
-          Cadastrar
+          Fechar
         </Button>
       </Modal.Footer>
     </Modal>
@@ -104,6 +81,7 @@ const ModalUser = ({ openModal, handleCloseModal }) => {
 
 ModalUser.propTypes = {
   openModal: PropTypes.bool,
+  user: PropTypes.object,
   handleCloseModal: PropTypes.func,
 };
 

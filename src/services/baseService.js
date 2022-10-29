@@ -13,15 +13,6 @@ export const get = async (path) => {
   }
 };
 
-export const getById = async (path) => {
-  try {
-    const { data } = await axios.get(path);
-    return handleSuccess(data);
-  } catch (error) {
-    return handleErrors(error);
-  }
-};
-
 export const post = async (path, payload) => {
   try {
     const { data } = await axios.post(path, payload);

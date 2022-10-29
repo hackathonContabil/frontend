@@ -23,8 +23,6 @@ const Clients = () => {
 
     if (!isValid) return;
 
-    console.log(search);
-
     setLoading(true);
     const response = '';
     setLoading(false);
