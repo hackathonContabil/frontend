@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Col, Form, Row, Table } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import { Context } from '../../common/context/context';
 import { getAll } from '../../services/user';
 import { Container } from './styles';
-import ModalUser from './components/ModalUser';
 import { maskCnpj, maskPhone } from '../../common/utils/masks';
+import ModalUser from './components/ModalUser';
 
 const Users = () => {
   const [show, setShow] = useState(false);
@@ -89,7 +89,12 @@ const Users = () => {
 
   return (
     <>
-      <ModalUser openModal={show} handleCloseModal={handleClose} user={user} />
+      <ModalUser
+        openModal={show}
+        handleCloseModal={handleClose}
+        user={user}
+        callback={handleGetUsers}
+      />
       <Container>
         <Row className="mb-3 w-100 mw-100">
           <Col md={6}>

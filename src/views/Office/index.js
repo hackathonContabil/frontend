@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Col, Form, Pagination, Row, Table } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import { Context } from '../../common/context/context';
 import { maskCnpj } from '../../common/utils/masks';
 import { getAll } from '../../services/office';
@@ -14,7 +14,7 @@ const Offices = () => {
   const [info, setInfo] = useState([]);
   const { setLoading } = useContext(Context);
 
-  useEffect(() => handleSubmit(), []);
+  useEffect(() => handleGetOffices(), []);
 
   const handleClose = () => {
     setShow(false);
@@ -24,7 +24,7 @@ const Offices = () => {
     setSearch({ ...search, [key]: value });
   };
 
-  const handleSubmit = async () => {
+  const handleGetOffices = async () => {
     setLoading(true);
     const response = await getAll(search);
 
@@ -62,6 +62,7 @@ const Offices = () => {
         handleCloseModal={handleClose}
         isUpdate={isUpdate}
         officeInfo={office}
+        callback={handleGetOffices}
       />
 
       <Container>
@@ -71,14 +72,14 @@ const Offices = () => {
               type="text"
               placeholder="Busque por CNPJ ou razão social"
               value={search.search}
-              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+              onKeyPress={(e) => e.key === 'Enter' && handleGetOffices()}
               onChange={(e) => {
                 handleChange('search', e.target.value);
               }}
             />
           </Col>
           <Col md={6} className="d-flex justify-content-between">
-            <Button onClick={() => handleSubmit()}>Pesquisar</Button>
+            <Button onClick={() => handleGetOffices()}>Pesquisar</Button>
             <Button
               variant="success"
               onClick={() => {

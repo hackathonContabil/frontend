@@ -5,7 +5,7 @@ import { Context } from '../../../common/context/context';
 import { useAlert } from 'react-alert';
 import { active } from '../../../services/user';
 
-const ModalUser = ({ openModal, handleCloseModal, user }) => {
+const ModalUser = ({ openModal, handleCloseModal, user, callback }) => {
   const { setLoading } = useContext(Context);
   const alert = useAlert();
 
@@ -19,7 +19,9 @@ const ModalUser = ({ openModal, handleCloseModal, user }) => {
       return alert.error(response.message);
     }
 
+    callback();
     handleCloseModal();
+
     return alert.success('Usuário ativado com sucesso');
   };
 
@@ -96,6 +98,7 @@ ModalUser.propTypes = {
   openModal: PropTypes.bool,
   user: PropTypes.object,
   handleCloseModal: PropTypes.func,
+  callback: PropTypes.func,
 };
 
 export default ModalUser;

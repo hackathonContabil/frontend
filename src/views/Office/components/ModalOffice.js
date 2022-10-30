@@ -7,7 +7,7 @@ import { validateCnpj } from '../../../common/utils/validators';
 import { create, removeOffice } from '../../../services/office';
 import { useAlert } from 'react-alert';
 
-const ModalCreateOffice = ({ openModal, handleCloseModal, isUpdate, officeInfo }) => {
+const ModalCreateOffice = ({ openModal, handleCloseModal, isUpdate, officeInfo, callback }) => {
   const [office, setOffice] = useState({ name: '', document: '' });
   const [nameError, setNameError] = useState(false);
   const [documentError, setDocumentError] = useState(false);
@@ -53,6 +53,7 @@ const ModalCreateOffice = ({ openModal, handleCloseModal, isUpdate, officeInfo }
         document: '',
       });
 
+      callback();
       handleCloseModal();
 
       return alert.success('Usuário cadastrado com sucesso!');
@@ -77,9 +78,9 @@ const ModalCreateOffice = ({ openModal, handleCloseModal, isUpdate, officeInfo }
     if (!response.success) {
       return alert.error(response.message);
     } else {
-      handleSubmit();
       handleCloseModal();
-      return alert.success('Usuário removido com sucesso!');
+      callback();
+      return alert.success('Escritório removido com sucesso!');
     }
   };
 
@@ -93,7 +94,7 @@ const ModalCreateOffice = ({ openModal, handleCloseModal, isUpdate, officeInfo }
       }}>
       <Modal.Header className="d-flex justify-content-center">
         <Modal.Title>
-          {isUpdate ? 'Opções do Escritório' : 'Cadastre um novo escritório'}
+          {isUpdate ? 'Opções do Escritório' : 'Cadastre um novo Escritório'}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -168,6 +169,7 @@ ModalCreateOffice.propTypes = {
   isUpdate: PropTypes.bool,
   officeInfo: PropTypes.object,
   handleCloseModal: PropTypes.func,
+  callback: PropTypes.func,
 };
 
 export default ModalCreateOffice;

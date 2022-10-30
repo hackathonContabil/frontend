@@ -6,7 +6,7 @@ import { useAlert } from 'react-alert';
 import { active } from '../../../services/client';
 import { useHistory } from 'react-router';
 
-const ModalClient = ({ openModal, handleCloseModal, user }) => {
+const ModalClient = ({ openModal, handleCloseModal, user, callback }) => {
   const { setLoading } = useContext(Context);
   const alert = useAlert();
   const history = useHistory();
@@ -21,6 +21,7 @@ const ModalClient = ({ openModal, handleCloseModal, user }) => {
       return alert.error(response.message);
     }
 
+    callback();
     handleCloseModal();
     return alert.success('Usuário ativado com sucesso');
   };
@@ -71,6 +72,7 @@ ModalClient.propTypes = {
   openModal: PropTypes.bool,
   user: PropTypes.object,
   handleCloseModal: PropTypes.func,
+  callback: PropTypes.func,
 };
 
 export default ModalClient;

@@ -13,7 +13,7 @@ const Clients = () => {
   const [user, setUser] = useState({ type: '', id: '', isActive: false });
   const { setLoading } = useContext(Context);
 
-  useEffect(() => handleGetUsers(), info);
+  useEffect(() => handleGetUsers(), []);
 
   const handleClose = () => {
     setShow(false);
@@ -87,7 +87,12 @@ const Clients = () => {
 
   return (
     <>
-      <ModalClient openModal={show} handleCloseModal={handleClose} user={user} />
+      <ModalClient
+        openModal={show}
+        handleCloseModal={handleClose}
+        user={user}
+        callback={handleGetUsers}
+      />
 
       <Container>
         <Row className="mb-3 w-100 mw-100">
