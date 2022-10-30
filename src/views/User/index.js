@@ -10,7 +10,7 @@ const Users = () => {
   const [show, setShow] = useState(false);
   const [search, setSearch] = useState({ search: '', page: 0, limit: 10 });
   const [info, setInfo] = useState([]);
-  const [user, setUser] = useState({ type: '', id: '', isActive: false });
+  const [user, setUser] = useState({ type: '', id: '', isActive: false, emailActive: false });
   const { setLoading } = useContext(Context);
 
   useEffect(() => {
@@ -22,9 +22,17 @@ const Users = () => {
   };
 
   const handleUser = (e) => {
-    if (e.isAdmin) setUser({ type: 'admin', id: e.id, isActive: e.isActive });
-    if (e.isAccountant) setUser({ type: 'accountant', id: e.id, isActive: e.isActive });
-    if (e.isClient) setUser({ type: 'client', id: e.id, isActive: e.isActive });
+    if (e.isAdmin)
+      setUser({ type: 'admin', id: e.id, isActive: e.isActive, emailActive: e.isEmailConfirmed });
+    if (e.isAccountant)
+      setUser({
+        type: 'accountant',
+        id: e.id,
+        isActive: e.isActive,
+        emailActive: e.isEmailConfirmed,
+      });
+    if (e.isClient)
+      setUser({ type: 'client', id: e.id, isActive: e.isActive, emailActive: e.isEmailConfirmed });
 
     setShow(true);
   };

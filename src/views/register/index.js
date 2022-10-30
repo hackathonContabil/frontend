@@ -215,7 +215,7 @@ const Register = () => {
                     onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
                     onChange={(e) => {
                       setConfirmPassword(e.target.value);
-                      handleError('confirmPassword', false);
+                      handleError('confirmPasswordError', false);
                     }}
                   />
                 </Form.Group>

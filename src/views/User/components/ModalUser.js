@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Col, Modal, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Modal, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Context } from '../../../common/context/context';
 import { useAlert } from 'react-alert';
@@ -33,8 +33,15 @@ const ModalUser = ({ openModal, handleCloseModal, user }) => {
           {user.type === 'accountant' ? (
             <>
               <Col md={12} className="d-flex justify-content-center">
+                {!user.emailActive && (
+                  <Alert key="info" variant="info" className="mb-3">
+                    E-mail do usuário não confirmado
+                  </Alert>
+                )}
+              </Col>
+              <Col md={12} className="d-flex justify-content-center">
                 <Button
-                  disabled={user.isActive}
+                  disabled={user.isActive || !user.emailActive}
                   onClick={() => handleActiveUser(user.id)}
                   className="w-50 mb-2">
                   Ativar Usuário
