@@ -40,7 +40,7 @@ const Consolidation = () => {
 
   useEffect(() => {
     handleGetTransactions();
-  }, info);
+  }, []);
 
   const handleExport = () => {
     return;
@@ -48,7 +48,7 @@ const Consolidation = () => {
 
   return (
     <Container>
-      <Row className="mb-3">
+      <Row className="mb-3 w-100 mw-100">
         <Col md={3}>
           <Form.Label>Data Inicial</Form.Label>
           <Form.Control
@@ -71,7 +71,7 @@ const Consolidation = () => {
           <Button onClick={() => handleGetTransactions()}>Pesquisar</Button>
         </Col>
       </Row>
-      <Row>
+      <Row className="overflow-auto w-100 mw-100">
         <Col>
           <table className="fl-table">
             <thead>
@@ -107,21 +107,21 @@ const Consolidation = () => {
           </table>
         </Col>
       </Row>
-      <Row>
-        <Col className="d-flex justify-content-end ">
+      <Row className="mt-2 w-100 mw-100">
+        <Col className="d-flex justify-content-end">
           <div className="pagination">
-            <a href="#">&laquo;</a>
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">6</a>
-            <a href="#">&raquo;</a>
+            <a style={{ fontSize: '12px' }}>&laquo;</a>
+            <a style={{ fontSize: '12px' }}>1</a>
+            <a style={{ fontSize: '12px' }}>2</a>
+            <a style={{ fontSize: '12px' }}>3</a>
+            <a style={{ fontSize: '12px' }}>4</a>
+            <a style={{ fontSize: '12px' }}>5</a>
+            <a style={{ fontSize: '12px' }}>6</a>
+            <a style={{ fontSize: '12px' }}>&raquo;</a>
           </div>
         </Col>
       </Row>
-      <Row className="mt-3">
+      <Row className="mt-3 w-100 mw-100">
         <Col className="d-flex justify-content-start align-items-end">
           <Button onClick={() => handleExport()}>Exportar Transações</Button>
         </Col>

@@ -13,7 +13,9 @@ const Users = () => {
   const [user, setUser] = useState({ type: '', id: '', isActive: false });
   const { setLoading } = useContext(Context);
 
-  useEffect(() => handleGetUsers(), []);
+  useEffect(() => {
+    handleGetUsers();
+  }, []);
 
   const handleClose = () => {
     setShow(false);
@@ -80,9 +82,8 @@ const Users = () => {
   return (
     <>
       <ModalUser openModal={show} handleCloseModal={handleClose} user={user} />
-
       <Container>
-        <Row className="mb-3">
+        <Row className="mb-3 w-100 mw-100">
           <Col md={6}>
             <Form.Control
               type="text"
@@ -98,11 +99,12 @@ const Users = () => {
             <Button onClick={() => handleGetUsers()}>Pesquisar</Button>
           </Col>
         </Row>
-        <Row className="mx-100">
+        <Row className="overflow-auto w-100 mw-100">
           <Col>
             <table className="fl-table">
               <thead>
                 <tr>
+                  <th>Ativo</th>
                   <th>Nome</th>
                   <th>E-mail</th>
                   <th>Escritório</th>
@@ -110,16 +112,16 @@ const Users = () => {
                   <th>Documento</th>
                   <th>Função</th>
                   <th>Data de Criação</th>
-                  <th>Compartilha Informações Bancárias</th>
-                  <th>E-mail validado</th>
+                  <th>Informações Bancárias</th>
+                  <th>E-mail Validado</th>
                   <th>Data de ativação do e-mail</th>
-                  <th>Ativo</th>
                 </tr>
               </thead>
               <tbody>
                 {info.map((user, index) => {
                   return (
                     <tr style={{ cursor: 'pointer' }} key={index} onClick={() => handleUser(user)}>
+                      <td>{user.isActive ? 'Sim' : 'Não'}</td>
                       <td>{user.name}</td>
                       <td>{user.email}</td>
                       <td>{user.accountingOfficeName}</td>
@@ -130,7 +132,6 @@ const Users = () => {
                       <td>{user.isSharingBankAccountData ? 'Sim' : 'Não'}</td>
                       <td>{user.isEmailConfirmed ? 'Sim' : 'Não'}</td>
                       <td>{user.emailConfirmedAt}</td>
-                      <td>{user.isActive ? 'Sim' : 'Não'}</td>
                     </tr>
                   );
                 })}
@@ -141,14 +142,14 @@ const Users = () => {
         <Row className="mt-3">
           <Col className="d-flex justify-content-end ">
             <div className="pagination">
-              <a href="#">&laquo;</a>
-              <a href="#">1</a>
-              <a href="#">2</a>
-              <a href="#">3</a>
-              <a href="#">4</a>
-              <a href="#">5</a>
-              <a href="#">6</a>
-              <a href="#">&raquo;</a>
+              <a style={{ fontSize: '12px' }}>&laquo;</a>
+              <a style={{ fontSize: '12px' }}>1</a>
+              <a style={{ fontSize: '12px' }}>2</a>
+              <a style={{ fontSize: '12px' }}>3</a>
+              <a style={{ fontSize: '12px' }}>4</a>
+              <a style={{ fontSize: '12px' }}>5</a>
+              <a style={{ fontSize: '12px' }}>6</a>
+              <a style={{ fontSize: '12px' }}>&raquo;</a>
             </div>
           </Col>
         </Row>
