@@ -53,7 +53,10 @@ const ModalClient = ({ openModal, handleCloseModal, user, callback }) => {
             </Button>
           </Col>
           <Col md={12} className="d-flex justify-content-center">
-            <Button onClick={() => handleTransactions(user.id)} className="w-50">
+            <Button
+              disabled={!user.isSharingBankAccountData}
+              onClick={() => handleTransactions(user.id)}
+              className="w-50">
               Acessar Transações
             </Button>
           </Col>

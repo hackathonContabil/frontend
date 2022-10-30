@@ -9,7 +9,7 @@ import './styles.css';
 
 const Consolidation = () => {
   const [info, setInfo] = useState([]);
-  const [search, setSearch] = useState({ from: '', to: '', page: 0, limit: 10 });
+  const [search, setSearch] = useState({ from: '', to: '', page: 0, limit: 15 });
   const { setLoading } = useContext(Context);
   const { id } = useParams();
   const alert = useAlert();
@@ -157,16 +157,6 @@ const Consolidation = () => {
             <li>
               <a style={{ fontSize: '10px' }} href="#" className="active">
                 1
-              </a>
-            </li>
-            <li>
-              <a style={{ fontSize: '10px' }} href="#">
-                2
-              </a>
-            </li>
-            <li>
-              <a style={{ fontSize: '10px' }} href="#">
-                3
               </a>
             </li>
           </ul>

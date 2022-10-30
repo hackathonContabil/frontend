@@ -9,7 +9,7 @@ import { Container } from './styles';
 const Offices = () => {
   const [show, setShow] = useState(false);
   const [isUpdate, setIsUpate] = useState(false);
-  const [search, setSearch] = useState({ search: '', page: 0, limit: 10 });
+  const [search, setSearch] = useState({ search: '', page: 0, limit: 15 });
   const [office, setOffice] = useState({ id: '' });
   const [info, setInfo] = useState([]);
   const { setLoading } = useContext(Context);
@@ -125,16 +125,6 @@ const Offices = () => {
               <li>
                 <a style={{ fontSize: '10px' }} href="#" className="active">
                   1
-                </a>
-              </li>
-              <li>
-                <a style={{ fontSize: '10px' }} href="#">
-                  2
-                </a>
-              </li>
-              <li>
-                <a style={{ fontSize: '10px' }} href="#">
-                  3
                 </a>
               </li>
             </ul>

@@ -8,9 +8,15 @@ import { maskCnpj, maskPhone } from '../../common/utils/masks';
 
 const Clients = () => {
   const [show, setShow] = useState(false);
-  const [search, setSearch] = useState({ search: '', page: 0, limit: 10 });
+  const [search, setSearch] = useState({ search: '', page: 0, limit: 15 });
   const [info, setInfo] = useState([]);
-  const [user, setUser] = useState({ type: '', id: '', isActive: false });
+  const [user, setUser] = useState({
+    type: '',
+    id: '',
+    isActive: false,
+    emailActive: false,
+    isSharingBankAccountData: false,
+  });
   const { setLoading } = useContext(Context);
 
   useEffect(() => handleGetUsers(), []);
@@ -21,16 +27,29 @@ const Clients = () => {
 
   const handleUser = (e) => {
     if (e.isAdmin)
-      setUser({ type: 'admin', id: e.id, isActive: e.isActive, emailActive: e.isEmailConfirmed });
+      setUser({
+        type: 'admin',
+        id: e.id,
+        isActive: e.isActive,
+        emailActive: e.isEmailConfirmed,
+        isSharingBankAccountData: e.isSharingBankAccountData,
+      });
     if (e.isAccountant)
       setUser({
         type: 'accountant',
         id: e.id,
         isActive: e.isActive,
         emailActive: e.isEmailConfirmed,
+        isSharingBankAccountData: e.isSharingBankAccountData,
       });
     if (e.isClient)
-      setUser({ type: 'client', id: e.id, isActive: e.isActive, emailActive: e.isEmailConfirmed });
+      setUser({
+        type: 'client',
+        id: e.id,
+        isActive: e.isActive,
+        emailActive: e.isEmailConfirmed,
+        isSharingBankAccountData: e.isSharingBankAccountData,
+      });
 
     setShow(true);
   };
@@ -116,6 +135,7 @@ const Clients = () => {
             <table className="fl-table">
               <thead>
                 <tr>
+                  <th>Ativo</th>
                   <th>Nome</th>
                   <th>E-mail</th>
                   <th>Escritório</th>
@@ -126,24 +146,32 @@ const Clients = () => {
                   <th>Compartilha Informações Bancárias</th>
                   <th>E-mail validado</th>
                   <th>Data de ativação do e-mail</th>
-                  <th>Ativo</th>
                 </tr>
               </thead>
               <tbody>
-                {info.map((user, index) => {
+                {info.map((userInfo, index) => {
                   return (
-                    <tr style={{ cursor: 'pointer' }} key={index} onClick={() => handleUser(user)}>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <td>{user.office}</td>
-                      <td>{user.phone}</td>
-                      <td>{user.document}</td>
-                      <td>{user.isAccountant ? 'Contador' : user.isAdmin ? 'Admin' : 'Cliente'}</td>
-                      <td>{user.createdAt}</td>
-                      <td>{user.isSharingBankAccountData ? 'Sim' : 'Não'}</td>
-                      <td>{user.isEmailConfirmed ? 'Sim' : 'Não'}</td>
-                      <td>{user.emailConfirmedAt}</td>
-                      <td>{user.isActive ? 'Sim' : 'Não'}</td>
+                    <tr
+                      style={{ cursor: 'pointer' }}
+                      key={index}
+                      onClick={() => handleUser(userInfo)}>
+                      <td>{userInfo.isActive ? 'Sim' : 'Não'}</td>
+                      <td>{userInfo.name}</td>
+                      <td>{userInfo.email}</td>
+                      <td>{userInfo.accountingOfficeName}</td>
+                      <td>{userInfo.phone}</td>
+                      <td>{userInfo.document}</td>
+                      <td>
+                        {userInfo.isAccountant
+                          ? 'Contador'
+                          : userInfo.isAdmin
+                          ? 'Admin'
+                          : 'Cliente'}
+                      </td>
+                      <td>{userInfo.createdAt}</td>
+                      <td>{userInfo.isSharingBankAccountData ? 'Sim' : 'Não'}</td>
+                      <td>{userInfo.isEmailConfirmed ? 'Sim' : 'Não'}</td>
+                      <td>{userInfo.emailConfirmedAt}</td>
                     </tr>
                   );
                 })}
@@ -157,16 +185,6 @@ const Clients = () => {
               <li>
                 <a style={{ fontSize: '10px' }} href="#" className="active">
                   1
-                </a>
-              </li>
-              <li>
-                <a style={{ fontSize: '10px' }} href="#">
-                  2
-                </a>
-              </li>
-              <li>
-                <a style={{ fontSize: '10px' }} href="#">
-                  3
                 </a>
               </li>
             </ul>

@@ -160,16 +160,6 @@ const Users = () => {
                   1
                 </a>
               </li>
-              <li>
-                <a style={{ fontSize: '10px' }} href="#">
-                  2
-                </a>
-              </li>
-              <li>
-                <a style={{ fontSize: '10px' }} href="#">
-                  3
-                </a>
-              </li>
             </ul>
           </Col>
         </Row>
