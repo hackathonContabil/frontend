@@ -27,7 +27,7 @@ export const getAll = async (data) => {
 
 export const removeOffice = async (data) => {
   try {
-    const response = await remove(`/api/v1/accounting-office/${data}`);
+    const response = await remove(`api/v1/accounting-office/${data}`);
 
     return response;
   } catch (error) {

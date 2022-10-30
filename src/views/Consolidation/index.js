@@ -3,13 +3,13 @@ import { useAlert } from 'react-alert';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { Context } from '../../common/context/context';
-import { getAll } from '../../services/consolidation';
+import { exportBankingReconciliation, exportCashFlow, getAll } from '../../services/consolidation';
 import { Container } from './styles';
 import './styles.css';
 
 const Consolidation = () => {
   const [info, setInfo] = useState([]);
-  const [search, setSearch] = useState({ initialDate: '', finalDate: '', page: 0, limit: 10 });
+  const [search, setSearch] = useState({ from: '', to: '', page: 0, limit: 10 });
   const { setLoading } = useContext(Context);
   const { id } = useParams();
   const alert = useAlert();
@@ -42,8 +42,52 @@ const Consolidation = () => {
     handleGetTransactions();
   }, []);
 
-  const handleExport = () => {
-    return;
+  const handleExportCashFlow = async () => {
+    setLoading(true);
+
+    const response = await exportCashFlow(id, search);
+
+    if (!response.success) {
+      return alert.error(response.message);
+    }
+
+    const href = window.URL.createObjectURL(new Blob([response.data], { type: 'application/csv' }));
+    const link = document.createElement('a');
+
+    link.href = href;
+    link.setAttribute('download', 'fluxo-de-caixa.csv');
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(href);
+
+    setLoading(false);
+    return alert.success('Arquivo exportado com sucesso!');
+  };
+
+  const handleExportBankingReconciliation = async () => {
+    setLoading(true);
+
+    const response = await exportBankingReconciliation(id, search);
+
+    if (!response.success) {
+      return alert.error(response.message);
+    }
+
+    const href = window.URL.createObjectURL(new Blob([response.data], { type: 'application/csv' }));
+    const link = document.createElement('a');
+
+    link.href = href;
+    link.setAttribute('download', 'conciliacao-bancaria.csv');
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(href);
+
+    setLoading(false);
+    return alert.success('Arquivo exportado com sucesso!');
   };
 
   return (
@@ -54,8 +98,8 @@ const Consolidation = () => {
           <Form.Control
             type="date"
             placeholder="Enter email"
-            value={search.initialDate}
-            onChange={(e) => handleChange('initialDate', e.target.value)}
+            value={search.from}
+            onChange={(e) => handleChange('from', e.target.value)}
           />
         </Col>
         <Col md={3}>
@@ -63,8 +107,8 @@ const Consolidation = () => {
           <Form.Control
             type="date"
             placeholder="Enter email"
-            search={search.finalDate}
-            onChange={(e) => handleChange('finalDate', e.target.value)}
+            search={search.to}
+            onChange={(e) => handleChange('to', e.target.value)}
           />
         </Col>
         <Col md={3} className="d-flex justify-content-start align-items-end">
@@ -121,9 +165,14 @@ const Consolidation = () => {
           </div>
         </Col>
       </Row>
-      <Row className="mt-3 w-100 mw-100">
+      <Row className="w-100 mw-100">
         <Col className="d-flex justify-content-start align-items-end">
-          <Button onClick={() => handleExport()}>Exportar Transações</Button>
+          <Button className={'mr-2'} onClick={() => handleExportCashFlow()}>
+            Exportar Fluxo de Caixa
+          </Button>
+          <Button className={'ml-2'} onClick={() => handleExportBankingReconciliation()}>
+            Exportar Consolidação Bancária
+          </Button>
         </Col>
       </Row>
     </Container>
