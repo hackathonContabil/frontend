@@ -13,7 +13,7 @@ const Users = () => {
   const [user, setUser] = useState({ type: '', id: '', isActive: false });
   const { setLoading } = useContext(Context);
 
-  useEffect(() => handleGetUsers(), info);
+  useEffect(() => handleGetUsers(), []);
 
   const handleClose = () => {
     setShow(false);
@@ -98,12 +98,11 @@ const Users = () => {
             <Button onClick={() => handleGetUsers()}>Pesquisar</Button>
           </Col>
         </Row>
-        <Row>
+        <Row className="mx-100">
           <Col>
-            <Table responsive striped bordered hover>
+            <table className="fl-table">
               <thead>
                 <tr>
-                  <th>Código</th>
                   <th>Nome</th>
                   <th>E-mail</th>
                   <th>Escritório</th>
@@ -121,10 +120,9 @@ const Users = () => {
                 {info.map((user, index) => {
                   return (
                     <tr style={{ cursor: 'pointer' }} key={index} onClick={() => handleUser(user)}>
-                      <td>{user.id}</td>
                       <td>{user.name}</td>
                       <td>{user.email}</td>
-                      <td>{user.office}</td>
+                      <td>{user.accountingOfficeName}</td>
                       <td>{user.phone}</td>
                       <td>{user.document}</td>
                       <td>{user.isAccountant ? 'Contador' : user.isAdmin ? 'Admin' : 'Cliente'}</td>
@@ -137,38 +135,21 @@ const Users = () => {
                   );
                 })}
               </tbody>
-            </Table>
+            </table>
           </Col>
         </Row>
         <Row className="mt-3">
           <Col className="d-flex justify-content-end ">
-            <ul className="pagination">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  {'<'}
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  {'>'}
-                </a>
-              </li>
-            </ul>
+            <div className="pagination">
+              <a href="#">&laquo;</a>
+              <a href="#">1</a>
+              <a href="#">2</a>
+              <a href="#">3</a>
+              <a href="#">4</a>
+              <a href="#">5</a>
+              <a href="#">6</a>
+              <a href="#">&raquo;</a>
+            </div>
           </Col>
         </Row>
       </Container>

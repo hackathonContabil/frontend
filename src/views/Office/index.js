@@ -14,14 +14,14 @@ const Offices = () => {
   const [info, setInfo] = useState([]);
   const { setLoading } = useContext(Context);
 
-  useEffect(() => handleSubmit(), info);
+  useEffect(() => handleSubmit(), []);
 
   const handleClose = () => {
     setShow(false);
   };
 
-  const handleChange = (value) => {
-    setSearch(value);
+  const handleChange = (key, value) => {
+    setSearch({ ...search, [key]: value });
   };
 
   const handleSubmit = async () => {
@@ -73,7 +73,7 @@ const Offices = () => {
               value={search.search}
               onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
               onChange={(e) => {
-                handleChange(e.target.value);
+                handleChange('search', e.target.value);
               }}
             />
           </Col>
@@ -91,10 +91,10 @@ const Offices = () => {
         </Row>
         <Row>
           <Col>
-            <Table responsive striped bordered hover>
+            <table className="fl-table">
+              {' '}
               <thead>
                 <tr>
-                  <th>Código</th>
                   <th>CNPJ</th>
                   <th>Razão Social</th>
                 </tr>
@@ -109,45 +109,27 @@ const Offices = () => {
                         handleOffice(office);
                         setIsUpate(true);
                       }}>
-                      <td style={{ width: '10px' }}>{office.id}</td>
                       <td>{office.name}</td>
                       <td>{office.document}</td>
                     </tr>
                   );
                 })}
               </tbody>
-            </Table>
+            </table>
           </Col>
         </Row>
         <Row>
           <Col className="d-flex justify-content-end">
-            <ul className="pagination">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  {'<'}
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  {'>'}
-                </a>
-              </li>
-            </ul>
+            <div className="pagination">
+              <a href="#">&laquo;</a>
+              <a href="#">1</a>
+              <a href="#">2</a>
+              <a href="#">3</a>
+              <a href="#">4</a>
+              <a href="#">5</a>
+              <a href="#">6</a>
+              <a href="#">&raquo;</a>
+            </div>
           </Col>
         </Row>
       </Container>

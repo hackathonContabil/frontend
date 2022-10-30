@@ -152,7 +152,7 @@ const ModalCreateOffice = ({ openModal, handleCloseModal, isUpdate, officeInfo }
           </Col>
           {!isUpdate && (
             <Col className="d-flex justify-content-center">
-              <Button variant="primary" onClick={() => handleSubmit()}>
+              <Button variant="success" onClick={() => handleSubmit()}>
                 Cadastrar
               </Button>
             </Col>
