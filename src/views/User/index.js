@@ -8,7 +8,7 @@ import ModalUser from './components/ModalUser';
 
 const Users = () => {
   const [show, setShow] = useState(false);
-  const [search, setSearch] = useState({ search: '', page: 0, limit: 10 });
+  const [search, setSearch] = useState({ search: '', page: 0, limit: 15 });
   const [info, setInfo] = useState([]);
   const [user, setUser] = useState({ type: '', id: '', isActive: false, emailActive: false });
   const { setLoading } = useContext(Context);
@@ -152,18 +152,25 @@ const Users = () => {
             </table>
           </Col>
         </Row>
-        <Row className="mt-3">
-          <Col className="d-flex justify-content-end ">
-            <div className="pagination">
-              <a style={{ fontSize: '12px' }}>&laquo;</a>
-              <a style={{ fontSize: '12px' }}>1</a>
-              <a style={{ fontSize: '12px' }}>2</a>
-              <a style={{ fontSize: '12px' }}>3</a>
-              <a style={{ fontSize: '12px' }}>4</a>
-              <a style={{ fontSize: '12px' }}>5</a>
-              <a style={{ fontSize: '12px' }}>6</a>
-              <a style={{ fontSize: '12px' }}>&raquo;</a>
-            </div>
+        <Row className="mt-3 w-100 mw-100">
+          <Col className="d-flex justify-content-end">
+            <ul className="pagination modal-1">
+              <li>
+                <a style={{ fontSize: '10px' }} href="#" className="active">
+                  1
+                </a>
+              </li>
+              <li>
+                <a style={{ fontSize: '10px' }} href="#">
+                  2
+                </a>
+              </li>
+              <li>
+                <a style={{ fontSize: '10px' }} href="#">
+                  3
+                </a>
+              </li>
+            </ul>
           </Col>
         </Row>
       </Container>
